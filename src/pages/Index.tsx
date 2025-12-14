@@ -6,15 +6,15 @@ import profileCard from "../assets/j_profilecard.jpg";
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
-      {/* Background texture */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
+      {/* Additional background layers for Index page */}
+      <div className="fixed inset-0 -z-[9] overflow-hidden">
         <motion.div 
-          className="absolute inset-0 bg-gradient-to-br from-tan-light/50 via-background to-steel-light/20"
+          className="absolute inset-0 bg-gradient-to-br from-tan-light/30 via-background/50 to-steel-light/10"
           animate={{
             backgroundPosition: ["0% 0%", "100% 100%"],
           }}
           transition={{
-            duration: 20,
+            duration: 25,
             repeat: Infinity,
             repeatType: "reverse",
             ease: "linear",
@@ -23,21 +23,23 @@ const Index = () => {
         <motion.div 
           className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent"
           animate={{
-            opacity: [0.3, 0.6, 0.3],
+            opacity: [0.2, 0.5, 0.2],
+            x: [0, 20, 0],
           }}
           transition={{
-            duration: 8,
+            duration: 12,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
         <motion.div 
-          className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-tan/10 to-transparent"
+          className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-tan/8 to-transparent"
           animate={{
-            opacity: [0.4, 0.7, 0.4],
+            opacity: [0.3, 0.6, 0.3],
+            y: [0, -15, 0],
           }}
           transition={{
-            duration: 10,
+            duration: 15,
             repeat: Infinity,
             ease: "easeInOut",
           }}

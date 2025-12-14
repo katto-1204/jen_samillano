@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import Navigation from "./Navigation";
 import CustomCursor from "./CustomCursor";
+import AnimatedBackground from "./AnimatedBackground";
 
 interface LayoutProps {
   children: ReactNode;
@@ -33,7 +34,8 @@ const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <AnimatedBackground />
       <CustomCursor />
       <Navigation />
       <AnimatePresence mode="wait">
