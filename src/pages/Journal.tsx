@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { X, BookOpen } from "lucide-react";
 
@@ -90,48 +90,76 @@ const Journal = () => {
           {journalPages.map((page, index) => (
             <motion.article
               key={page.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 40, rotateX: -15 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: index * 0.15 }}
+              transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -8, scale: 1.02 }}
               onClick={() => setSelectedPage(page)}
               className="group cursor-pointer"
             >
-              <div className="relative border border-border bg-card hover:border-accent transition-all duration-700 overflow-hidden">
+              <motion.div 
+                className="relative border border-border bg-card hover:border-accent transition-all duration-700 overflow-hidden"
+                whileHover={{ boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+              >
                 {/* Preview Image */}
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
+                <motion.div 
+                  className="aspect-[4/3] overflow-hidden"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <motion.img
                     src={page.preview}
                     alt={page.title}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0"
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                   />
-                </div>
+                </motion.div>
 
                 {/* Content */}
-                <div className="p-6 md:p-8 border-t border-border">
+                <motion.div 
+                  className="p-6 md:p-8 border-t border-border"
+                  initial={{ y: 0 }}
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.3 }}
+                >
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-xs tracking-[0.2em] uppercase text-primary mb-2 block">
+                      <motion.span 
+                        className="text-xs tracking-[0.2em] uppercase text-primary mb-2 block"
+                        whileHover={{ x: 2 }}
+                      >
                         {page.day}
-                      </span>
+                      </motion.span>
                       <h3 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
                         {page.title}
                       </h3>
                     </div>
-                    <BookOpen 
-                      size={20} 
-                      className="text-muted-foreground group-hover:text-primary transition-colors" 
-                    />
+                    <motion.div
+                      whileHover={{ rotate: 15, scale: 1.1 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
+                      <BookOpen 
+                        size={20} 
+                        className="text-muted-foreground group-hover:text-primary transition-colors" 
+                      />
+                    </motion.div>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Decorative corner */}
-                <div className="absolute top-0 right-0 w-12 h-12 border-l border-b border-border bg-background flex items-center justify-center">
+                <motion.div 
+                  className="absolute top-0 right-0 w-12 h-12 border-l border-b border-border bg-background flex items-center justify-center"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <span className="font-serif text-sm text-foreground/30">
                     {String(page.id).padStart(2, "0")}
                   </span>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </motion.article>
           ))}
         </div>
@@ -150,43 +178,60 @@ const Journal = () => {
       </div>
 
       {/* Journal Viewer Modal */}
-      {selectedPage && (
-        <motion.div
+      <AnimatePresence>
+        {selectedPage && (
+          <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-coffee flex items-center justify-center p-6 overflow-y-auto"
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 bg-coffee/95 backdrop-blur-sm flex items-center justify-center p-6 overflow-y-auto"
           onClick={() => setSelectedPage(null)}
         >
-          <button
-            className="absolute top-8 right-8 text-tan hover:text-tan-light transition-colors z-10"
+          <motion.button
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.4, delay: 0.2, type: "spring" }}
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            className="absolute top-8 right-8 text-tan hover:text-tan-light z-10 bg-coffee/50 rounded-full p-2 backdrop-blur-sm"
             onClick={() => setSelectedPage(null)}
           >
             <X size={28} />
-          </button>
+          </motion.button>
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.4 }}
+            initial={{ scale: 0.9, opacity: 0, y: 20, rotateY: -10 }}
+            animate={{ scale: 1, opacity: 1, y: 0, rotateY: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-3xl w-full my-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="text-center mb-8">
+            <motion.div 
+              className="text-center mb-8"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.4 }}
+            >
               <span className="text-xs tracking-[0.2em] uppercase text-steel-light">
                 {selectedPage.day}
               </span>
               <h3 className="font-serif text-3xl text-tan mt-2">
                 {selectedPage.title}
               </h3>
-            </div>
-            <img
+            </motion.div>
+            <motion.img
               src={selectedPage.fullImage}
               alt={selectedPage.title}
-              className="w-full shadow-2xl"
+              className="w-full shadow-2xl rounded-lg"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
             />
           </motion.div>
         </motion.div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };

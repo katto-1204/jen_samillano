@@ -79,25 +79,39 @@ const Companies = () => {
               {cebuCompanies.map((company, index) => (
                 <motion.article
                   key={company.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, x: -30, scale: 0.95 }}
+                  whileInView={{ opacity: 1, x: 0, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  whileHover={{ x: 8, scale: 1.02 }}
                   className="group"
                 >
-                  <div className="flex items-start gap-6 p-6 md:p-8 border border-border bg-card hover:border-accent hover:bg-tan-light/30 transition-all duration-500">
-                    <span className="font-serif text-3xl text-foreground/20 group-hover:text-primary/40 transition-colors">
+                  <motion.div 
+                    className="flex items-start gap-6 p-6 md:p-8 border border-border bg-card hover:border-accent hover:bg-tan-light/30 transition-all duration-500"
+                    whileHover={{ boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.span 
+                      className="font-serif text-3xl text-foreground/20 group-hover:text-primary/40 transition-colors"
+                      whileHover={{ scale: 1.3, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
                       {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <div className="flex-1">
+                    </motion.span>
+                    <motion.div 
+                      className="flex-1"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: index * 0.1 + 0.2 }}
+                    >
                       <h3 className="font-serif text-xl md:text-2xl text-foreground mb-2 group-hover:text-primary transition-colors">
                         {company.name}
                       </h3>
                       <p className="text-sm text-muted-foreground">
                         {company.description}
                       </p>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                 </motion.article>
               ))}
             </div>
@@ -120,25 +134,39 @@ const Companies = () => {
               {boholCompanies.map((company, index) => (
                 <motion.article
                   key={company.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, x: -30, scale: 0.95 }}
+                  whileInView={{ opacity: 1, x: 0, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  whileHover={{ x: 8, scale: 1.02 }}
                   className="group"
                 >
-                  <div className="flex items-start gap-6 p-6 md:p-8 border border-border bg-card hover:border-accent hover:bg-tan-light/30 transition-all duration-500">
-                    <span className="font-serif text-3xl text-foreground/20 group-hover:text-primary/40 transition-colors">
+                  <motion.div 
+                    className="flex items-start gap-6 p-6 md:p-8 border border-border bg-card hover:border-accent hover:bg-tan-light/30 transition-all duration-500"
+                    whileHover={{ boxShadow: "0 10px 30px rgba(0,0,0,0.1)" }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.span 
+                      className="font-serif text-3xl text-foreground/20 group-hover:text-primary/40 transition-colors"
+                      whileHover={{ scale: 1.3, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
                       {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <div className="flex-1">
+                    </motion.span>
+                    <motion.div 
+                      className="flex-1"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: index * 0.1 + 0.2 }}
+                    >
                       <h3 className="font-serif text-xl md:text-2xl text-foreground mb-2 group-hover:text-primary transition-colors">
                         {company.name}
                       </h3>
                       <p className="text-sm text-muted-foreground">
                         {company.description}
                       </p>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                 </motion.article>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { X, ExternalLink } from "lucide-react";
 import certificateImage from "../assets/cert_jennelyn.png";
@@ -48,78 +48,114 @@ const Certificates = () => {
           {certificates.map((cert, index) => (
             <motion.article
               key={cert.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -30, scale: 0.95 }}
+              whileInView={{ opacity: 1, x: 0, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.08 }}
+              transition={{ duration: 0.6, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ x: 5, scale: 1.01 }}
               onClick={() => setSelectedCert(cert)}
               className="group cursor-pointer bg-background"
             >
-              <div className="flex items-center gap-6 md:gap-10 p-6 md:p-8 hover:bg-tan-light/30 transition-all duration-500">
+              <motion.div 
+                className="flex items-center gap-6 md:gap-10 p-6 md:p-8 hover:bg-tan-light/30 transition-all duration-500"
+                whileHover={{ paddingLeft: "2rem" }}
+                transition={{ duration: 0.3 }}
+              >
                 {/* Number */}
-                <span className="font-serif text-2xl text-foreground/20 group-hover:text-primary transition-colors w-12">
+                <motion.span 
+                  className="font-serif text-2xl text-foreground/20 group-hover:text-primary transition-colors w-12"
+                  whileHover={{ scale: 1.2, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
                   {String(cert.id).padStart(2, "0")}
-                </span>
+                </motion.span>
 
                 {/* Content */}
-                <div className="flex-1 min-w-0">
+                <motion.div 
+                  className="flex-1 min-w-0"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: index * 0.08 + 0.2 }}
+                >
                   <h3 className="font-serif text-lg md:text-xl text-foreground group-hover:text-primary transition-colors mb-1 truncate">
                     {cert.title}
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     {cert.issuer} <span className="text-border mx-2">|</span> {cert.year}
                   </p>
-                </div>
+                </motion.div>
 
                 {/* Icon */}
-                <ExternalLink 
-                  size={18} 
-                  className="text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" 
-                />
-              </div>
+                <motion.div
+                  whileHover={{ rotate: 45, scale: 1.2 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <ExternalLink 
+                    size={18} 
+                    className="text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" 
+                  />
+                </motion.div>
+              </motion.div>
             </motion.article>
           ))}
         </div>
       </div>
 
       {/* Certificate Viewer Modal */}
-      {selectedCert && (
-        <motion.div
+      <AnimatePresence>
+        {selectedCert && (
+          <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-coffee flex items-center justify-center p-6"
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 bg-coffee/95 backdrop-blur-sm flex items-center justify-center p-6 overflow-y-auto"
           onClick={() => setSelectedCert(null)}
         >
-          <button
-            className="absolute top-8 right-8 text-tan hover:text-tan-light transition-colors"
+          <motion.button
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.4, delay: 0.2, type: "spring" }}
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            className="absolute top-8 right-8 text-tan hover:text-tan-light z-10 bg-coffee/50 rounded-full p-2 backdrop-blur-sm"
             onClick={() => setSelectedCert(null)}
           >
             <X size={28} />
-          </button>
+          </motion.button>
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.4 }}
+            initial={{ scale: 0.8, opacity: 0, y: 30, rotateY: -15 }}
+            animate={{ scale: 1, opacity: 1, y: 0, rotateY: 0 }}
+            exit={{ scale: 0.8, opacity: 0, y: 30 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-4xl w-full"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
+            <motion.img
               src={selectedCert.image}
               alt={selectedCert.title}
-              className="w-full shadow-2xl"
+              className="w-full shadow-2xl rounded-lg"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
             />
-            <div className="mt-8 text-center">
+            <motion.div 
+              className="mt-8 text-center"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.4 }}
+            >
               <h3 className="font-serif text-2xl text-tan mb-2">
                 {selectedCert.title}
               </h3>
               <p className="text-tan/60 text-sm">
                 {selectedCert.issuer} • {selectedCert.year}
               </p>
-            </div>
+            </motion.div>
           </motion.div>
         </motion.div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };

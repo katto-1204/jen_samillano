@@ -124,6 +124,18 @@
     font-family: var(--font-sans);
   }
 
+  /* Hide default cursor on desktop devices */
+  @media (hover: hover) {
+    body {
+      cursor: none;
+    }
+
+    /* Hide default cursor on interactive elements when custom cursor is active */
+    a, button, .cursor-pointer, .nav-link {
+      cursor: none;
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
   }

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { X, Expand } from "lucide-react";
 
@@ -97,41 +97,86 @@ const Archive = () => {
               transition={{ duration: 1, delay: index * 0.1 }}
             >
               {/* Day Header */}
-              <div className="flex items-baseline gap-6 mb-10">
-                <span className="font-serif text-7xl md:text-8xl text-foreground/10">
+              <motion.div 
+                className="flex items-baseline gap-6 mb-10"
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: index * 0.1 + 0.2 }}
+              >
+                <motion.span 
+                  className="font-serif text-7xl md:text-8xl text-foreground/10"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 + 0.3, type: "spring" }}
+                >
                   {String(item.day).padStart(2, "0")}
-                </span>
-                <div>
+                </motion.span>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 + 0.4 }}
+                >
                   <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-1">
                     {item.title}
                   </h2>
                   <p className="text-sm text-muted-foreground tracking-wide">
                     {item.description}
                   </p>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
 
               {/* Image Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {item.images.map((image, imgIndex) => (
                   <motion.div
                     key={imgIndex}
-                    whileHover={{ scale: 1.01 }}
-                    transition={{ duration: 0.6 }}
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ 
+                      duration: 0.6, 
+                      delay: (index * 0.1) + (imgIndex * 0.1),
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
+                    whileHover={{ 
+                      scale: 1.02,
+                      y: -5,
+                      transition: { duration: 0.3, ease: "easeOut" }
+                    }}
                     className="archive-card aspect-[4/3] cursor-pointer group"
                     onClick={() => setSelectedImage(image)}
                   >
-                    <img
+                    <motion.img
                       src={image}
                       alt={`Day ${item.day} - Image ${imgIndex + 1}`}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="w-full h-full object-cover"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.7, ease: "easeOut" }}
                     />
-                    <div className="archive-overlay">
-                      <div className="flex items-center gap-3 text-tan-light">
-                        <Expand size={18} />
+                    <motion.div 
+                      className="archive-overlay"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <motion.div 
+                        className="flex items-center gap-3 text-tan-light"
+                        initial={{ y: 10, opacity: 0 }}
+                        whileHover={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                      >
+                        <motion.div
+                          animate={{ rotate: [0, 10, -10, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                        >
+                          <Expand size={18} />
+                        </motion.div>
                         <span className="text-sm tracking-wide">View Full</span>
-                      </div>
-                    </div>
+                      </motion.div>
+                    </motion.div>
                   </motion.div>
                 ))}
               </div>
@@ -141,30 +186,39 @@ const Archive = () => {
       </div>
 
       {/* Lightbox */}
-      {selectedImage && (
-        <motion.div
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-coffee flex items-center justify-center p-6"
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 bg-coffee/95 backdrop-blur-sm flex items-center justify-center p-6"
           onClick={() => setSelectedImage(null)}
         >
-          <button
-            className="absolute top-8 right-8 text-tan hover:text-tan-light transition-colors"
+          <motion.button
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.4, delay: 0.2, type: "spring" }}
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            className="absolute top-8 right-8 text-tan hover:text-tan-light transition-colors z-10 bg-coffee/50 rounded-full p-2 backdrop-blur-sm"
             onClick={() => setSelectedImage(null)}
           >
             <X size={28} />
-          </button>
+          </motion.button>
           <motion.img
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.4 }}
+            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             src={selectedImage}
             alt="Full view"
-            className="max-w-full max-h-[85vh] object-contain"
+            className="max-w-full max-h-[85vh] object-contain shadow-2xl rounded-lg"
           />
         </motion.div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };

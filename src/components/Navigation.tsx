@@ -19,36 +19,69 @@ const Navigation = () => {
       <nav className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
         <div className="flex items-center justify-between h-20 md:h-24">
           {/* Logo */}
-          <NavLink to="/" className="group">
-            <span className="font-serif text-2xl md:text-3xl tracking-tight text-foreground">
-              J<span className="text-primary">.</span>S
-            </span>
-          </NavLink>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <NavLink to="/" className="group">
+              <motion.span 
+                className="font-serif text-2xl md:text-3xl tracking-tight text-foreground"
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                J<span className="text-primary">.</span>S
+              </motion.span>
+            </NavLink>
+          </motion.div>
 
           {/* Desktop Navigation */}
-          <ul className="hidden md:flex items-center gap-10 lg:gap-14">
-            {navItems.map((item) => (
-              <li key={item.path}>
+          <motion.ul 
+            className="hidden md:flex items-center gap-10 lg:gap-14"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {navItems.map((item, index) => (
+              <motion.li 
+                key={item.path}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+              >
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
                     `nav-link ${isActive ? "active" : ""}`
                   }
                 >
-                  {item.label}
+                  {({ isActive }) => (
+                    <motion.span
+                      whileHover={{ y: -2 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
+                      {item.label}
+                    </motion.span>
+                  )}
                 </NavLink>
-              </li>
+              </motion.li>
             ))}
-          </ul>
+          </motion.ul>
 
           {/* Mobile Menu Button */}
-          <button
+          <motion.button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 text-foreground hover:text-primary transition-colors"
             aria-label="Toggle menu"
+            whileTap={{ scale: 0.9 }}
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            <motion.div
+              animate={{ rotate: isOpen ? 90 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </motion.div>
+          </motion.button>
         </div>
 
         {/* Mobile Navigation */}
